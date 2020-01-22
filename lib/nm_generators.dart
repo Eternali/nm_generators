@@ -9,11 +9,15 @@ import 'package:flutter/material.dart';
 typedef NMGenerator = BoxDecoration Function(Color base,
     {Color accent, NMTheme style});
 
+/// 3D shape the neumorphic widget can take.
 enum NMShape {
   concave,
   convex,
 }
 
+/// Direction the light source casting shadows comes from.
+/// Ideally this will be deprecated in lieu of an [Offset] to make it
+/// even more customizable.
 enum NMLightSource {
   bottomLeft,
   topLeft,
@@ -21,6 +25,7 @@ enum NMLightSource {
   bottomRight,
 }
 
+/// Theme dictating neumorphic design customizations.
 class NMTheme {
   NMTheme({
     this.borderRadius = 20,
@@ -34,14 +39,30 @@ class NMTheme {
     blur ??= distance * 2;
   }
 
+  /// The border radius of the widget.
   double borderRadius;
+
+  /// The distance from the underlying widget that should be emulated.
   double distance;
+
+  /// The contrast of shadows to background.
   double intensity;
+
+  /// The dispersion of shadows on the underlying widget.
+  /// Defaults to [distance] times 2.
   double blur;
+
+  /// Whether or not the background of the widget should have a gradient
+  /// to emulate a 3D shape.
   bool gradientBackground;
+
+  /// Whether or not the shape of the widget should be concave or convex.
   NMShape shape;
+
+  /// The direction of the light source casting shadows.
   NMLightSource lightSource;
 
+  /// Return a new [NMTheme] copied from [this] with any number of parameters changed.
   NMTheme copyWith({
     double borderRadius,
     double distance,
@@ -97,6 +118,8 @@ class NMGenerators {
     return Color(int.parse(o, radix: 16)).withAlpha(255);
   }
 
+  /// Receives a [NMTheme] and returns a shadow offset generated from
+  /// the [NMLightSource].
   static Offset sourceToOffset(NMTheme style) {
     Offset off;
     switch (style.lightSource) {
@@ -116,6 +139,11 @@ class NMGenerators {
     return off;
   }
 
+  /// Common neumorphic box.
+  /// Takes a [base] color which is usually the background color of the app
+  /// and returns a [BoxDecoration] that can be used make a neumorphic widget.
+  /// The [accent] color can be optionally specified to change the color of
+  /// the container.
   static NMGenerator box = (Color base, {Color accent, NMTheme style}) {
     style ??= theme;
     final offset = sourceToOffset(style);
@@ -160,6 +188,7 @@ class NMGenerators {
     );
   };
 
+  /// Common neumorphic button.
   static NMGenerator button = (Color base, {Color accent, NMTheme style}) {
     style ??= theme;
 
