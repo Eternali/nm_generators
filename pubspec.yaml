@@ -1,0 +1,18 @@
+name: nm_generators
+description: A flutter package to create super customizable neumorphic widgets.
+version: 0.0.1
+author: Conrad Heidebrecht
+homepage: https://github.com/eternali/nm_generators
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
