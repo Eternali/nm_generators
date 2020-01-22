@@ -149,7 +149,9 @@ class NMGenerators {
     final offset = sourceToOffset(style);
 
     return BoxDecoration(
-      borderRadius: BorderRadius.circular(style.borderRadius),
+      borderRadius: style.borderRadius == 0
+          ? null
+          : BorderRadius.circular(style.borderRadius),
       color: accent ?? base,
       gradient: accent == null
           ? LinearGradient(

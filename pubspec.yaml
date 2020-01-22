@@ -1,6 +1,6 @@
 name: nm_generators
 description: A flutter package to create super customizable neumorphic widgets.
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/eternali/nm_generators
 
 environment:
