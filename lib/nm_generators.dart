@@ -10,10 +10,7 @@ typedef NMGenerator = BoxDecoration Function(Color base,
     {Color accent, NMTheme style});
 
 /// 3D shape the neumorphic widget can take.
-enum NMShape {
-  concave,
-  convex,
-}
+enum NMShape { concave, convex, emboss, flat }
 
 /// Direction the light source casting shadows comes from.
 /// Ideally this will be deprecated in lieu of an [Offset] to make it
@@ -32,8 +29,7 @@ class NMTheme {
     this.distance = 4,
     this.intensity = 0.25,
     this.blur = 8,
-    this.gradientBackground = true,
-    this.shape = NMShape.concave,
+    this.shape = NMShape.convex,
     this.lightSource = NMLightSource.topLeft,
   }) {
     blur ??= distance * 2;
@@ -52,11 +48,7 @@ class NMTheme {
   /// Defaults to [distance] times 2.
   double blur;
 
-  /// Whether or not the background of the widget should have a gradient
-  /// to emulate a 3D shape.
-  bool gradientBackground;
-
-  /// Whether or not the shape of the widget should be concave or convex.
+  /// The shape of the widget.
   NMShape shape;
 
   /// The direction of the light source casting shadows.
@@ -77,7 +69,6 @@ class NMTheme {
         distance: distance ?? this.distance,
         intensity: intensity ?? this.intensity,
         blur: blur ?? (distance != null ? null : this.blur),
-        gradientBackground: gradientBackground ?? this.gradientBackground,
         shape: shape ?? this.shape,
         lightSource: lightSource ?? this.lightSource,
       );
@@ -90,7 +81,6 @@ class NMTheme {
           'distance': distance,
           'intensity': intensity,
           'blur': blur,
-          'gradientBackground': gradientBackground,
           'shape': shape,
           'lightSource': lightSource,
         }.toString();
@@ -164,26 +154,26 @@ class NMGenerators {
                 offset.dy.clamp(-1, 1).toDouble(),
               ),
               colors: [
-                style.gradientBackground
-                    ? colorGen(
-                        base, style.shape == NMShape.concave ? 0.07 : -0.1)
-                    : base,
-                style.gradientBackground
-                    ? colorGen(
-                        base, style.shape == NMShape.concave ? -0.1 : 0.07)
-                    : base,
+                style.shape == NMShape.flat
+                    ? base
+                    : colorGen(
+                        base, style.shape == NMShape.convex ? 0.07 : -0.1),
+                style.shape == NMShape.flat
+                    ? base
+                    : colorGen(
+                        base, style.shape == NMShape.convex ? -0.1 : 0.07),
               ],
             )
           : null,
       boxShadow: [
         BoxShadow(
           color: colorGen(base, -1 * style.intensity),
-          offset: offset,
+          offset: style.shape == NMShape.emboss ? offset.scale(-1, -1) : offset,
           blurRadius: style.blur,
         ),
         BoxShadow(
           color: colorGen(base, style.intensity),
-          offset: offset.scale(-1, -1),
+          offset: style.shape == NMShape.emboss ? offset : offset.scale(-1, -1),
           blurRadius: style.blur,
         ),
       ],
